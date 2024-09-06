@@ -33,7 +33,13 @@ public class UserServiceImpl implements UserService {
     }
     @Override
     public User create(UserDTO data) {
+        findByEmail(data);
         return repository.save(mapper.map(data,User.class));
     }
-
+    private void findByEmail(UserDTO data){
+        Optional<User> user = repository.findByEmail(data.getEmail());
+        if (user.isPresent()){
+            throw new DataIntegrityViolationException("Email already used");
+        }
+    }
 }
