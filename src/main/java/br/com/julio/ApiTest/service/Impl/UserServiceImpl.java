@@ -42,9 +42,15 @@ public class UserServiceImpl implements UserService {
         return repository.save(mapper.map(data,User.class));
     }
 
+    @Override
+    public void delete(Long id) {
+        findById(id);
+        repository.deleteById(id);
+    }
+
     private void findByEmail(UserDTO data){
         Optional<User> user = repository.findByEmail(data.getEmail());
-        if (user.isPresent() && user.get().getId().equals(data.getId())){
+        if (user.isPresent() && !user.get().getId().equals(data.getId())){
             throw new DataIntegrityViolationException("Email already used");
         }
     }

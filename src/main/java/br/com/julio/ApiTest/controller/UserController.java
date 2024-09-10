@@ -41,4 +41,9 @@ public class UserController {
         data.setId(id);
         return ResponseEntity.ok().body(mapper.map(service.update(data), UserDTO.class));
     }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<UserDTO> delete(@PathVariable Long id){
+        service.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 }
