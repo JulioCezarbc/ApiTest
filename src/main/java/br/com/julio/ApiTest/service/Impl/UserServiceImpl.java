@@ -9,7 +9,6 @@ import br.com.julio.ApiTest.service.exception.ObjectNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.ModelMap;
 
 import java.util.List;
 import java.util.Optional;
@@ -36,9 +35,16 @@ public class UserServiceImpl implements UserService {
         findByEmail(data);
         return repository.save(mapper.map(data,User.class));
     }
+
+    @Override
+    public User update(UserDTO data) {
+        findByEmail(data);
+        return repository.save(mapper.map(data,User.class));
+    }
+
     private void findByEmail(UserDTO data){
         Optional<User> user = repository.findByEmail(data.getEmail());
-        if (user.isPresent()){
+        if (user.isPresent() && user.get().getId().equals(data.getId())){
             throw new DataIntegrityViolationException("Email already used");
         }
     }
