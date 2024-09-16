@@ -12,11 +12,11 @@ import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -49,14 +49,14 @@ class UserServiceImplTest {
     void whenFindByIdThenReturnAnUserInstance(){
         when(repository.findById(anyLong())).thenReturn(optionalUser);
 
-        User responde = service.findById(ID);
+        User response = service.findById(ID);
 
-        assertNotNull(responde);
-        assertEquals(User.class, responde.getClass());
-        assertEquals(ID, responde.getId());
-        assertEquals(NAME, responde.getName());
-        assertEquals(MAIL, responde.getEmail());
-        assertEquals(PASSWORD, responde.getPassword());
+        assertNotNull(response);
+        assertEquals(User.class, response.getClass());
+        assertEquals(ID, response.getId());
+        assertEquals(NAME, response.getName());
+        assertEquals(MAIL, response.getEmail());
+        assertEquals(PASSWORD, response.getPassword());
     }
     @Test
     void whenFindByIdThenReturnAnObjectNotFoundException(){
@@ -68,6 +68,19 @@ class UserServiceImplTest {
             assertEquals(ObjectNotFoundException.class, e.getClass());
             assertEquals("User not found", e.getMessage());
         }
+    }
+    @Test
+    void whenFindAllThenReturnAnListOfUser(){
+        when(repository.findAll()).thenReturn(List.of(user));
+
+        List<User> response = repository.findAll();
+
+        assertNotNull(response);
+        assertEquals(User.class, response.getFirst().getClass());
+        assertEquals(ID, response.getFirst().getId());
+        assertEquals(NAME, response.getFirst().getName());
+        assertEquals(MAIL, response.getFirst().getEmail());
+        assertEquals(PASSWORD, response.getFirst().getPassword());
     }
 
     private void startUser(){
