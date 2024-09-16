@@ -3,6 +3,7 @@ package br.com.julio.ApiTest.service.Impl;
 import br.com.julio.ApiTest.domain.DTO.UserDTO;
 import br.com.julio.ApiTest.domain.User;
 import br.com.julio.ApiTest.repository.UserRepository;
+import br.com.julio.ApiTest.service.exception.ObjectNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -15,6 +16,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -55,6 +57,17 @@ class UserServiceImplTest {
         assertEquals(NAME, responde.getName());
         assertEquals(MAIL, responde.getEmail());
         assertEquals(PASSWORD, responde.getPassword());
+    }
+    @Test
+    void whenFindByIdThenReturnAnObjectNotFoundException(){
+        when(repository.findById(anyLong())).thenThrow(new ObjectNotFoundException("User not found"));
+
+        try{
+            service.findById(ID);
+        }catch (Exception e){
+            assertEquals(ObjectNotFoundException.class, e.getClass());
+            assertEquals("User not found", e.getMessage());
+        }
     }
 
     private void startUser(){
