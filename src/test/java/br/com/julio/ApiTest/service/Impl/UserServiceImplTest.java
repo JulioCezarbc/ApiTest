@@ -3,6 +3,7 @@ package br.com.julio.ApiTest.service.Impl;
 import br.com.julio.ApiTest.domain.DTO.UserDTO;
 import br.com.julio.ApiTest.domain.User;
 import br.com.julio.ApiTest.repository.UserRepository;
+import br.com.julio.ApiTest.service.exception.DataIntegrityViolationException;
 import br.com.julio.ApiTest.service.exception.ObjectNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,13 +12,13 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.w3c.dom.UserDataHandler;
 
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -96,6 +97,18 @@ class UserServiceImplTest {
         assertEquals(NAME, response.getName());
         assertEquals(MAIL, response.getEmail());
         assertEquals(PASSWORD, response.getPassword());
+    }
+    @Test
+    void whenCreateThenReturnAnDataIntegrityViolationException(){
+        when(repository.findByEmail(anyString())).thenReturn(optionalUser);
+
+        try {
+            optionalUser.get().setId(2L);
+            service.create(userData);
+        }catch (Exception e){
+            assertEquals(DataIntegrityViolationException.class, e.getClass());
+            assertEquals("Email already used", e.getMessage());
+        }
     }
 
     private void startUser(){
