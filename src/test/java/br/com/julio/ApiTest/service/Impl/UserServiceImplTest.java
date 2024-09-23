@@ -18,7 +18,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 class UserServiceImplTest {
@@ -134,6 +134,13 @@ class UserServiceImplTest {
             assertEquals(DataIntegrityViolationException.class, e.getClass());
             assertEquals("Email already used", e.getMessage());
         }
+    }
+    @Test
+    void deleteWithSuccess(){
+        when(repository.findById(anyLong())).thenReturn(optionalUser);
+        doNothing().when(repository).deleteById(anyLong());
+        service.delete(ID);
+        verify(repository,times(1)).deleteById(anyLong());
     }
 
     private void startUser(){
