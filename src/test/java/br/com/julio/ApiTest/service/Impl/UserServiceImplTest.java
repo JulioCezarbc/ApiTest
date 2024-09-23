@@ -122,6 +122,19 @@ class UserServiceImplTest {
         assertEquals(PASSWORD, response.getPassword());
 
     }
+    @Test
+    void whenUpdateThenReturnAnDataIntegrityViolationException(){
+        when(repository.findByEmail(anyString())).thenReturn(optionalUser);
+
+        try {
+            optionalUser.get().setId(2L);
+            service.update(userData);
+        }catch (Exception e)
+        {
+            assertEquals(DataIntegrityViolationException.class, e.getClass());
+            assertEquals("Email already used", e.getMessage());
+        }
+    }
 
     private void startUser(){
         user = new User(ID, NAME, MAIL, PASSWORD);
