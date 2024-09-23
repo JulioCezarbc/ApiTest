@@ -12,7 +12,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.w3c.dom.UserDataHandler;
 
 import java.util.List;
 import java.util.Optional;
@@ -109,6 +108,19 @@ class UserServiceImplTest {
             assertEquals(DataIntegrityViolationException.class, e.getClass());
             assertEquals("Email already used", e.getMessage());
         }
+    }
+    @Test
+    void whenUpdateThenReturnSuccess(){
+        when(repository.save(any())).thenReturn(user);
+        User response = service.update(userData);
+
+        assertNotNull(response);
+        assertEquals(User.class, response.getClass());
+        assertEquals(ID, response.getId());
+        assertEquals(NAME, response.getName());
+        assertEquals(MAIL, response.getEmail());
+        assertEquals(PASSWORD, response.getPassword());
+
     }
 
     private void startUser(){
