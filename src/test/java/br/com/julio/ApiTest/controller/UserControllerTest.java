@@ -82,6 +82,19 @@ class UserControllerTest {
         assertEquals(PASSWORD,response.getBody().getFirst().getPassword());
     }
 
+    @Test
+    void whenCreateThenReturnCreated(){
+        when(service.create(any())).thenReturn(user);
+
+        ResponseEntity<UserDTO> response = controller.create(userData);
+
+        assertNotNull(response);
+        assertEquals(HttpStatus.CREATED,response.getStatusCode());
+        assertNotNull(response.getHeaders().get("Location"));
+        assertEquals(ResponseEntity.class, response.getClass());
+
+    }
+
     private void startUser(){
         user = new User(ID, NAME, MAIL, PASSWORD);
         userData = new UserDTO(ID, NAME, MAIL, PASSWORD);
