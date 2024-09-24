@@ -95,6 +95,23 @@ class UserControllerTest {
 
     }
 
+    @Test
+    void whenUpdateThenReturnSuccess(){
+        when(service.update(userData)).thenReturn(user);
+        when(mapper.map(any(),any())).thenReturn(userData);
+
+        ResponseEntity<UserDTO> response = controller.update(ID,userData);
+
+        assertNotNull(response);
+        assertNotNull(response.getBody());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(ResponseEntity.class, response.getClass());
+        assertEquals(UserDTO.class, response.getBody().getClass());
+        assertEquals(ID,response.getBody().getId());
+        assertEquals(NAME,response.getBody().getName());
+        assertEquals(MAIL,response.getBody().getEmail());
+    }
+
     private void startUser(){
         user = new User(ID, NAME, MAIL, PASSWORD);
         userData = new UserDTO(ID, NAME, MAIL, PASSWORD);
