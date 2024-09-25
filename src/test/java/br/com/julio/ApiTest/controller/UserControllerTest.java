@@ -43,7 +43,6 @@ class UserControllerTest {
         MockitoAnnotations.openMocks(this);
         startUser();
     }
-
     @Test
     void whenFindByIdThenReturnSuccess(){
         when(service.findById(anyLong())).thenReturn(user);
@@ -60,7 +59,6 @@ class UserControllerTest {
         assertEquals(MAIL,response.getBody().getEmail());
         assertEquals(PASSWORD,response.getBody().getPassword());
     }
-
     @Test
     void whenFindAllThenReturnAListOfUserDTO(){
         when(service.findAll()).thenReturn(List.of(user));
@@ -80,7 +78,6 @@ class UserControllerTest {
         assertEquals(MAIL,response.getBody().getFirst().getEmail());
         assertEquals(PASSWORD,response.getBody().getFirst().getPassword());
     }
-
     @Test
     void whenCreateThenReturnCreated(){
         when(service.create(any())).thenReturn(user);
@@ -92,7 +89,6 @@ class UserControllerTest {
         assertNotNull(response.getHeaders().get("Location"));
         assertEquals(ResponseEntity.class, response.getClass());
     }
-
     @Test
     void whenUpdateThenReturnSuccess(){
         when(service.update(userData)).thenReturn(user);
@@ -121,7 +117,6 @@ class UserControllerTest {
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
 
     }
-
     private void startUser(){
         user = new User(ID, NAME, MAIL, PASSWORD);
         userData = new UserDTO(ID, NAME, MAIL, PASSWORD);
