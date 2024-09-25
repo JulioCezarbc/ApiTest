@@ -13,13 +13,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 class UserControllerTest {
@@ -92,7 +91,6 @@ class UserControllerTest {
         assertEquals(HttpStatus.CREATED,response.getStatusCode());
         assertNotNull(response.getHeaders().get("Location"));
         assertEquals(ResponseEntity.class, response.getClass());
-
     }
 
     @Test
@@ -111,10 +109,21 @@ class UserControllerTest {
         assertEquals(NAME,response.getBody().getName());
         assertEquals(MAIL,response.getBody().getEmail());
     }
+    @Test
+    void whenDeleteThenReturnSuccess(){
+        doNothing().when(service).delete(anyLong());
+
+        ResponseEntity<UserDTO> response = controller.delete(ID);
+
+        assertNotNull(response);
+        assertEquals(ResponseEntity.class, response.getClass());
+        verify(service, times(1)).delete(anyLong());
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+
+    }
 
     private void startUser(){
         user = new User(ID, NAME, MAIL, PASSWORD);
         userData = new UserDTO(ID, NAME, MAIL, PASSWORD);
     }
-
 }
